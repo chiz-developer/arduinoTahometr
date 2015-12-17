@@ -99,7 +99,7 @@ void loop(){
  if(millis()-prevTime > 2000){
    cnt = 0;
  }else{
-   cnt = 1000/(currTime-prevTime);
+   cnt = (60000/(currTime-prevTime));
  }
  disp(cnt);
 }//end loop
