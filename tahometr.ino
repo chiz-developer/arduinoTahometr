@@ -24,7 +24,7 @@ void digit(int numb, int rang){
 
   //включаю индикатор
   digitalWrite(latchPin, HIGH);
-  delay(6);
+  //delay(6);
 
 }
 
@@ -134,7 +134,7 @@ void loop(){
    cnt = (60000/(currTime-prevTime));
  }
  //disp(cnt);
- dispF(90.09);
+ dispF(13.09);
 }//end loop
 
 
