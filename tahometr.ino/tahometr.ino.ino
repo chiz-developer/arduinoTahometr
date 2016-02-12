@@ -3,6 +3,9 @@ int inPin = 4;
 int cnt = 0;
 static unsigned long prevTime = 0;
 static unsigned long currTime = 0;
+
+static unsigned long prevDispTime = 0;
+static unsigned long currDispTime = 0;
 //---------------------------
 int latchPin = 12;//защелка
 int clockPin = 13;//тактовый
@@ -128,14 +131,20 @@ void loop(){
       currTime = millis();
     }
  }
- if(millis()-prevTime > 2000){
-   cnt = 0;
- }else{
-   cnt = (60000/(currTime-prevTime));
- }
- //disp(cnt);
- dispF(13.09);
+
+ if( millis()-prevTime > 2000){
+    cnt = 0;
+  }else if( millis()-prevDispTime > 250) {
+    //update cnt
+    prevDispTime = millis();
+    cnt = (60000/(currTime-prevTime));
+    cnt = int(cnt/100)*100;
+  }
+ 
+ dispInt(cnt);
+ //dispF(13.09);
 }//end loop
+
 
 
 
