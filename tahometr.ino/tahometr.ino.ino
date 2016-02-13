@@ -1,4 +1,4 @@
-//17.12.15 - вывод готового алгоритма в лед-дисплей
+//13.02.16 - +ВОЛЬТМЕТР
 int inPin = 4;
 int cnt = 0;
 static unsigned long prevTime = 0;
@@ -7,10 +7,24 @@ static unsigned long currTime = 0;
 static unsigned long prevDispTime = 0;
 static unsigned long currDispTime = 0;
 //---------------------------
+float R1 = 100000.0; // сопротивление R1 (100K)
+float R2 = 17000.0; // сопротивление R2 (17K)
+int value = 0;
+float vout = 0.0;
+float vin = 0.0;
+int swPin = 0;
+//---------------------------
 int latchPin = 12;//защелка
 int clockPin = 13;//тактовый
 int dataPin = 11;//данные
+//===========================
 
+void multimetr(){
+  value = analogRead(0);
+  vout =  (5.0 / 1024.0) * value;
+  vin = vout / (R2/(R1+R2));  
+  dispF(vin);
+}
 
 void digit(int numb, int rang){
   byte numbs[11] = {
@@ -27,7 +41,6 @@ void digit(int numb, int rang){
 
   //включаю индикатор
   digitalWrite(latchPin, HIGH);
-  //delay(6);
 
 }
 
@@ -114,35 +127,45 @@ void setup(){
   pinMode(dataPin, OUTPUT); 
   
   pinMode(inPin, INPUT);
+  pinMode(3, INPUT);//VOLTMETR
 
 }
 
 void loop(){
 
- static uint8_t prevSt = LOW;
+  swPin = digitalRead(3);
+  if(swPin == 0) {
+    multimetr();
+  }else{
+    //TAHOMETR
 
- uint8_t currSt = digitalRead(inPin);
-
- if (currSt != prevSt){
-    prevSt = currSt;
+     static uint8_t prevSt = LOW;
+     uint8_t currSt = digitalRead(inPin);
     
-    if(currSt == HIGH){
-      prevTime = currTime;
-      currTime = millis();
-    }
- }
-
- if( millis()-prevTime > 2000){
-    cnt = 0;
-  }else if( millis()-prevDispTime > 250) {
-    //update cnt
-    prevDispTime = millis();
-    cnt = (60000/(currTime-prevTime));
-    cnt = int(cnt/100)*100;
+     if (currSt != prevSt){
+        prevSt = currSt;
+        
+        if(currSt == HIGH){
+          prevTime = currTime;
+          currTime = millis();
+        }
+     }
+    
+     if( millis()-prevTime > 2000){
+        cnt = 0;
+      }else if( millis()-prevDispTime > 250) {
+        //update cnt
+        prevDispTime = millis();
+        cnt = (60000/(currTime-prevTime));
+        cnt = int(cnt/100)*100;
+      }
+     
+     dispInt(cnt);
+     //END TAHOMETR
+    
   }
- 
- dispInt(cnt);
- //dispF(13.09);
+
+
 }//end loop
 
 
