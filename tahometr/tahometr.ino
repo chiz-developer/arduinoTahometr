@@ -8,7 +8,7 @@ static unsigned long prevDispTime = 0;
 static unsigned long currDispTime = 0;
 //---------------------------
 float R1 = 100000.0; // сопротивление R1 (100K)
-float R2 = 18000.0; // сопротивление R2 (17K)
+float R2 = 23000.0; // сопротивление R2 (17K)
 int value = 0;
 float vout = 0.0;
 float vin = 0.0;
@@ -24,7 +24,7 @@ void multimetr(){
   vout =  (5.0 / 1024.0) * value;
    
   
-  if( millis()-prevDispTime > 500) {
+  if( millis()-prevDispTime > 2000) {
      vin = vout / (R2/(R1+R2));
      prevDispTime = millis(); 
   }
@@ -162,7 +162,7 @@ void loop(){
       }else if( millis()-prevDispTime > 250) {
         //update cnt
         prevDispTime = millis();
-        cnt = (60000/(currTime-prevTime));
+        cnt = 2*(60000/(currTime-prevTime));
         cnt = int(cnt/100)*100;
       }
      
@@ -173,6 +173,7 @@ void loop(){
 
 
 }//end loop
+
 
 
 
